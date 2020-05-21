@@ -89,7 +89,7 @@ object SlickItemRepository {
 ```
 `SlickItemRepository.live` is a repository layer that depends on raw underlying database.
 
-You can notice `ZIO.fromDBIO` which is provided by zio-slick-interop and is described underneath.
+You can notice `ZIO.fromDBIO` which is provided by zio-slick-interop and is described below.
 
 #### 2. Lifting DBIO into ZIO
 
