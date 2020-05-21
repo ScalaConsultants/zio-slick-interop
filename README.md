@@ -4,6 +4,14 @@
 
 Small library, that provides interop between [Slick](http://scala-slick.org/) and [ZIO](https://zio.dev/)
 
+### How to use
+
+Include zio-slick-interop in your build:
+
+```
+libraryDependencies += "io.scalac" %% "zio-slick-interop" % "<tbd>"
+```
+
 It gives you a couple of nice things:
 
 #### 1. `DatabaseProvider` service
