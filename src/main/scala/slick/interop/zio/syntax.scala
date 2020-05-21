@@ -1,9 +1,9 @@
-package slick.interop
+package slick.interop.zio
 
 import slick.dbio.{ DBIO, StreamingDBIO }
 import zio.ZIO
-import zio.interop.reactivestreams._
 import zio.stream.ZStream
+import zio.interop.reactivestreams._
 
 object syntax {
 

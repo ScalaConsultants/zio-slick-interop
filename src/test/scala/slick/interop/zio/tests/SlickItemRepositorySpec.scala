@@ -1,10 +1,11 @@
-package slick.interop.tests
+package slick.interop.zio.tests
 
 import com.typesafe.config.ConfigFactory
-import slick.interop.DatabaseProvider
+import slick.interop.zio.DatabaseProvider
 import zio.test.Assertion.equalTo
 import zio.test._
 import zio.{ ZIO, ZLayer }
+
 import scala.jdk.CollectionConverters._
 
 object SlickItemRepositorySpec extends DefaultRunnableSpec {

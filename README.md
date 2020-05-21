@@ -11,7 +11,7 @@ It gives you a couple of nice things:
 Database is usually a dependency for your other services. Since `ZLayer` is the best and recommended way to do DI with ZIO, 
 zio-slick-interop provides some convenience bindings for using slick with `ZLayer`.
 
-Specifically, it's `slick.interop.DatabaseProvider`, which is a service, defined by `ZLayer` guidelines and provides access to underlying slick database.
+Specifically, it's `slick.interop.zio.DatabaseProvider`, which is a service, defined by `ZLayer` guidelines and provides access to underlying slick database.
 
 You'd generally want to use it when defining your repository services, like the following.
 
@@ -56,11 +56,13 @@ Then we can implement it using `DatabaseProvider`:
 
 ```scala
 
+
 import zio._
+
 import scala.concurrent.duration._
+import slick.interop.zio.DatabaseProvider
 // adds ZIO.fromDBIO extension
-import slick.interop.DatabaseProvider
-import slick.interop.syntax._
+import slick.interop.zio.syntax._
 // import your specific DB driver here
 import slick.jdbc.H2Profile.api._
 
@@ -94,8 +96,8 @@ You can notice `ZIO.fromDBIO` which is provided by zio-slick-interop and is desc
 There's a syntax extension allowing to lift `DBIO` actions into `ZIO`:
 
 ```scala
-import slick.interop.DatabaseProvider
-import slick.interop.syntax._
+import slick.interop.zio.syntax._
+import slick.interop.zio.DatabaseProvider
 import zio._
 // import your specific DB driver here
 import slick.jdbc.H2Profile.api._
@@ -106,7 +108,7 @@ val z: ZIO[DatabaseProvider, Throwable, Int] = ZIO.fromDBIO(insert)
 ```
 This is a ZIO, that can be run given a `DatabaseProvider` is present in the environment.
 
-⚠️ Make sure to have `slick.interop.syntax._` imported.
+⚠️ Make sure to have `slick.interop.zio.syntax._` imported.
 
 There's also `ZIO.fromStreamingDBIO`, which works with streaming slick actions.
 
@@ -122,7 +124,7 @@ Here's an example of creating a `DatabaseProvider` layer:
 ```scala
 import zio._
 import com.typesafe.config.Config
-import slick.interop.DatabaseProvider
+import slick.interop.zio.DatabaseProvider
 
 val rootConfig: Config = ???
 

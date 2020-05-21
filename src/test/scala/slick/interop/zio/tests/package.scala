@@ -1,4 +1,4 @@
-package slick.interop
+package slick.interop.zio
 
 import zio.Has
 

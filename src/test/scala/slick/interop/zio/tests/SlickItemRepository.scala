@@ -1,7 +1,7 @@
-package slick.interop.tests
+package slick.interop.zio.tests
 
-import slick.interop.DatabaseProvider
-import slick.interop.syntax._
+import slick.interop.zio.syntax._
+import slick.interop.zio.DatabaseProvider
 import slick.jdbc.H2Profile.api._
 import zio._
 

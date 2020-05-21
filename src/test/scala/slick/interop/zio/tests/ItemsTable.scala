@@ -1,4 +1,4 @@
-package slick.interop.tests
+package slick.interop.zio.tests
 
 import slick.jdbc.H2Profile.api._
 

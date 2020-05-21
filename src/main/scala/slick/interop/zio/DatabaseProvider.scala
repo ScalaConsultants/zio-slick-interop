@@ -1,4 +1,4 @@
-package slick.interop
+package slick.interop.zio
 
 import com.typesafe.config.Config
 import slick.basic.BasicBackend
