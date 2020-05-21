@@ -125,7 +125,7 @@ There's also `ZIO.fromStreamingDBIO`, which works with streaming slick actions.
 `DatabaseProvider` provides a `live` layer that needs:
 
 * a typesafe `Config`, that points to a [standard Slick configuration block](https://scala-slick.org/doc/3.3.2/api/index.html#slick.jdbc.JdbcBackend$DatabaseFactoryDef@forConfig(String,Config,Driver,ClassLoader):Database);
-* specifig database backed you're using.
+* specific database backend you're using.
 
 Here's an example of creating a `DatabaseProvider` layer:
 
