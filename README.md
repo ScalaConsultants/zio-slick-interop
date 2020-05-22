@@ -1,7 +1,7 @@
 # zio-slick-interop
 
 ![CI](https://github.com/ScalaConsultants/zio-slick-interop/workflows/Scala%20CI/badge.svg)
-
+[![Maven Central](https://img.shields.io/maven-central/v/io.scalac/zio-slick-interop_2.13.svg)](https://github.com/ScalaConsultants/zio-slick-interop)
 Small library, that provides interop between [Slick](http://scala-slick.org/) and [ZIO](https://zio.dev/)
 
 ### How to use
