@@ -68,6 +68,8 @@ val root = (project in file("."))
     name := "zio-slick-interop",
     scalaVersion := "2.13.2",
     crossScalaVersions := Seq("2.12.11", "2.13.2"),
+    // JavaConverters ¯\_(ツ)_/¯
+    scalacOptions in Test ~= (_ filterNot (_ == "-Xfatal-warnings")),
     scalacOptions ++= {
       if (priorTo2_13(scalaVersion.value)) compilerOptions
       else
