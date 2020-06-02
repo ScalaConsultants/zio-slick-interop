@@ -25,7 +25,7 @@ object SlickItemRepositoryPropertyCheckingSpec extends DefaultRunnableSpec {
 
   private val nameGen: Gen[Random with Sized, String] = alphaNumericStringBounded(2, 20)
 
-  private val specs: Spec[ItemRepository, TestFailure[Throwable], TestSuccess] =
+  private val specs: Spec[Random with Sized with ItemRepository, TestFailure[Throwable], TestSuccess] =
     suite("Item repository")(
       testM("Add and get items") {
         checkM(nameGen) { name =>
@@ -41,5 +41,5 @@ object SlickItemRepositoryPropertyCheckingSpec extends DefaultRunnableSpec {
       }
     )
 
-  def spec = specs.provideLayer(env.orDie)
+  def spec = specs.provideSomeLayer[Random with Sized](env.orDie)
 }
