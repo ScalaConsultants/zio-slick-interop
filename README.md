@@ -142,3 +142,5 @@ val dbBackendLayer = ZLayer.succeed(slick.jdbc.H2Profile.backend)
 
 (dbConfigLayer ++ dbBackendLayer) >>> DatabaseProvider.live
 ```
+
+Developed by [Scalac](https://scalac.io/?utm_source=scalac_github&utm_campaign=scalac1&utm_medium=web)
