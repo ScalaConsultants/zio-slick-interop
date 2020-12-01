@@ -84,7 +84,7 @@ val root = (project in file("."))
       "com.typesafe.slick" %% "slick"                       % slickVersion,
       "dev.zio"            %% "zio"                         % zioVersion,
       "dev.zio"            %% "zio-interop-reactivestreams" % zioRSVersion,
-      "com.h2database"     % "h2"                           % "1.4.200" % Test,
+      "com.h2database"      % "h2"                          % "1.4.200"  % Test,
       "dev.zio"            %% "zio-test-sbt"                % zioVersion % Test
     )
   )
