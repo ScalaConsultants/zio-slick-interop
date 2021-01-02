@@ -19,7 +19,9 @@ object SlickItemRepositorySpec extends DefaultRunnableSpec {
   )
 
   private val env: ZLayer[Any, Throwable, ItemRepository] =
-    (ZLayer.succeed(config) ++ ZLayer.succeed(slick.jdbc.H2Profile.backend)) >>> DatabaseProvider.live >>> SlickItemRepository.live
+    (ZLayer.succeed(config) ++ ZLayer.succeed(
+      slick.jdbc.H2Profile.backend
+    )) >>> DatabaseProvider.live >>> SlickItemRepository.live
 
   private val specs: Spec[ItemRepository, TestFailure[Throwable], TestSuccess] =
     suite("Item repository")(
