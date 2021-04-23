@@ -2,6 +2,7 @@ package slick.interop.zio.tests
 
 import com.typesafe.config.ConfigFactory
 import slick.interop.zio.DatabaseProvider
+import slick.jdbc.JdbcProfile
 import zio.test.Assertion.equalTo
 import zio.test._
 import zio.{ ZIO, ZLayer }
@@ -19,8 +20,8 @@ object SlickItemRepositorySpec extends DefaultRunnableSpec {
   )
 
   private val env: ZLayer[Any, Throwable, ItemRepository] =
-    (ZLayer.succeed(config) ++ ZLayer.succeed(
-      slick.jdbc.H2Profile.backend
+    (ZLayer.succeed(config) ++ ZLayer.succeed[JdbcProfile](
+      slick.jdbc.H2Profile
     )) >>> DatabaseProvider.live >>> SlickItemRepository.live
 
   private val specs: Spec[ItemRepository, TestFailure[Throwable], TestSuccess] =
