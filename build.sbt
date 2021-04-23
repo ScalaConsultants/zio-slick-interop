@@ -2,7 +2,7 @@ import ReleaseTransformations._
 import ReleasePlugin.autoImport._
 
 val zioVersion       = "1.0.7"
-val zioRSVersion     = "1.3.0.7-2"
+val zioRSVersion     = "1.3.3"
 val slickVersion     = "3.3.3"
 val scalaTestVersion = "3.1.1"
 
