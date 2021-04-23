@@ -81,11 +81,12 @@ val root = (project in file("."))
     },
     testFrameworks := Seq(new TestFramework("zio.test.sbt.ZTestFramework")),
     libraryDependencies ++= Seq(
-      "com.typesafe.slick" %% "slick"                       % slickVersion,
-      "dev.zio"            %% "zio"                         % zioVersion,
-      "dev.zio"            %% "zio-interop-reactivestreams" % zioRSVersion,
-      "com.h2database"      % "h2"                          % "1.4.200"  % Test,
-      "dev.zio"            %% "zio-test-sbt"                % zioVersion % Test
+      "com.typesafe.slick"     %% "slick"                       % slickVersion,
+      "dev.zio"                %% "zio"                         % zioVersion,
+      "dev.zio"                %% "zio-interop-reactivestreams" % zioRSVersion,
+      "org.scala-lang.modules" %% "scala-collection-compat"     % "2.4.3"    % Test,
+      "com.h2database"         % "h2"                           % "1.4.200"  % Test,
+      "dev.zio"                %% "zio-test-sbt"                % zioVersion % Test
     )
   )
   .settings(publishSettings: _*)
