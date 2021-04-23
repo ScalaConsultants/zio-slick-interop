@@ -31,7 +31,7 @@ val publishSettings = Seq(
   licenses := Seq("MIT" -> url("https://opensource.org/licenses/MIT")),
   publishTo := sonatypePublishToBundle.value,
   publishMavenStyle := true,
-  publishArtifact in Test := false,
+  Test / publishArtifact := false,
   scmInfo := Some(
     ScmInfo(
       url("https://github.com/ScalaConsultants/zio-slick-interop"),
@@ -44,6 +44,12 @@ val publishSettings = Seq(
       name = "Vladimir Pavkin",
       email = "vpavkin@gmail.com",
       url = url("https://pavkin.ru")
+    ),
+    Developer(
+      id = "jczuchnowski",
+      name = "Jakub Czuchnowski",
+      email = "jakub.czuchnowski@gmail.com",
+      url = url("https://github.com/jczuchnowski")
     )
   ),
   releaseProcess := Seq[ReleaseStep](
@@ -69,7 +75,7 @@ val root = (project in file("."))
     scalaVersion := "2.13.5",
     crossScalaVersions := Seq("2.12.13", "2.13.5"),
     // JavaConverters ¯\_(ツ)_/¯
-    scalacOptions in Test ~= (_ filterNot (_ == "-Xfatal-warnings")),
+    Test / scalacOptions ~= (_ filterNot (_ == "-Xfatal-warnings")),
     scalacOptions ++= {
       if (priorTo2_13(scalaVersion.value)) compilerOptions
       else
