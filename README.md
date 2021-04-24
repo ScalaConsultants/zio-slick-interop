@@ -49,50 +49,40 @@ And we want to have a repository service on top of it with the following contrac
 ```scala
 import zio._
 
-// repository service, defined by ZLayer guidelines
-type ItemRepository = Has[ItemRepository.Service]
-
-object ItemRepository {
-
-  trait Service {
+trait ItemRepository {
 
     def getById(id: Long): IO[Throwable, Option[Item]]
-  }
+
 }
 ```
 
-Then we can implement it using `DatabaseProvider`:
+Then we can implement it as a database-agnostic Slick repository using `DatabaseProvider`:
 
 ```scala
-
-
 import zio._
 
-import scala.concurrent.duration._
 import slick.interop.zio.DatabaseProvider
 // adds ZIO.fromDBIO extension
 import slick.interop.zio.syntax._
-// import your specific DB driver here
-import slick.jdbc.H2Profile.api._
-
-final class SlickItemRepository(db: DatabaseProvider)
-    extends ItemRepository.Service {
-
-  def getById(id: Long): IO[Throwable, Option[Item]] = {
-    val query = ItemsTable.table.filter(_.id === id).result
-
-    ZIO.fromDBIO(query).map(_.headOption).provide(db)
-  }
-
-}
 
 object SlickItemRepository {
 
-  val live: ZLayer[DatabaseProvider, Throwable, ItemRepository] =
-    ZLayer.fromFunctionM { db =>
-      val initialize = ZIO.fromDBIO(ItemsTable.table.schema.createIfNotExists)
+  val live: ZLayer[DatabaseProvider, Throwable, Has[ItemRepository]] =
+    ZLayer.fromServiceM { db =>
+      db.profile.map { profile =>
 
-      initialize.map(_ => new SlickItemRepository(db)).provide(db)
+        import profile.api._
+        
+        new ItemRepository {
+          private val items = ItemsTable.table
+
+          def getById(id: Long): IO[Throwable, Option[Item]] = {
+            val query = items.filter(_.id === id).result
+        
+            ZIO.fromDBIO(query).map(_.headOption).provide(Has(db))
+          }
+        }
+      }
     }
 }
 ```
@@ -162,7 +152,7 @@ import slick.interop.zio.DatabaseProvider
 val rootConfig: Config = ???
 
 val dbConfigLayer = ZLayer.fromEffect (ZIO.effect(rootConfig.getConfig("db")))
-val dbBackendLayer = ZLayer.succeed(slick.jdbc.H2Profile.backend)
+val dbBackendLayer = ZLayer.succeed(slick.jdbc.H2Profile)
 
 (dbConfigLayer ++ dbBackendLayer) >>> DatabaseProvider.live
 ```
