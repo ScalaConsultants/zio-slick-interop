@@ -6,7 +6,7 @@ import zio._
 
 object SlickItemRepository {
 
-  val live: ZLayer[DatabaseProvider, Throwable, Has[ItemRepository]] =
+  val live: ZLayer[Has[DatabaseProvider], Throwable, Has[ItemRepository]] =
     ZLayer.fromServiceM { db =>
       db.profile.flatMap { profile =>
         import profile.api._
