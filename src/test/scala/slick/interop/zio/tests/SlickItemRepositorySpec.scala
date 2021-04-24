@@ -3,11 +3,12 @@ package slick.interop.zio.tests
 import com.typesafe.config.ConfigFactory
 import slick.interop.zio.DatabaseProvider
 import slick.jdbc.JdbcProfile
-import zio.test.Assertion.equalTo
+import zio.test.Assertion.{ equalTo, isSome, not }
+import zio.test.TestAspect.sequential
 import zio.test._
 import zio.{ ZIO, ZLayer }
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 object SlickItemRepositorySpec extends DefaultRunnableSpec {
 
@@ -28,14 +29,27 @@ object SlickItemRepositorySpec extends DefaultRunnableSpec {
     suite("Item repository")(
       testM("Add and get items") {
         for {
-          repo <- ZIO.access[ItemRepository](_.get)
+          repo <- ZIO.service[ItemRepository.Service]
           _    <- repo.add("A")
           _    <- repo.add("B")
           a    <- repo.getById(1L)
           b    <- repo.getById(2L)
-        } yield assert(a.map(_.name))(equalTo(Some("A"))) && assert(b.map(_.name))(equalTo(Some("B")))
+        } yield assert(a.map(_.name))(isSome(equalTo("A"))) &&
+          assert(b.map(_.name))(isSome(equalTo("B")))
+      },
+      testM("Upsert items") {
+        for {
+          repo <- ZIO.service[ItemRepository.Service]
+          cId  <- repo.upsert("C")
+          c    <- repo.getById(cId)
+          cId2 <- repo.upsert("C")
+          c2   <- repo.getById(cId)
+        } yield assert(c.map(_.name))(isSome(equalTo("C"))) &&
+          assert(c2.map(_.name))(isSome(equalTo("C"))) &&
+          assert(cId)(equalTo(cId2)) &&
+          assert(cId)(not(equalTo(1L)))
       }
-    )
+    ) @@ sequential
 
   def spec = specs.provideLayer(env.orDie)
 }

@@ -121,6 +121,30 @@ This is a ZIO, that can be run given a `DatabaseProvider` is present in the envi
 
 There's also `ZIO.fromStreamingDBIO`, which works with streaming slick actions.
 
+When executing a sequence of actions (when "`flatMap`-ing"), in the context of a transaction with `transactionally` for example,
+Slick requires an implicit `ExecutionContext` in scope. For this use-case, another overload to `ZIO.fromDBIO` takes a function with an 
+`ExecutionContext` as argument:
+```scala
+import slick.interop.zio.syntax._
+import slick.interop.zio.DatabaseProvider
+import zio._
+
+// import your specific DB driver here
+import slick.jdbc.H2Profile.api._
+
+import scala.concurrent.ExecutionContext
+
+val id: Long = ???
+
+val z: ZIO[DatabaseProvider, Throwable, Unit] = 
+  ZIO.fromDBIO { implicit ec: ExecutionContext =>
+    (for {
+      _ <- ItemsTable.table += Item(0L, "name")
+      _ <- ItemsTable.table.filter(_.id === id).map(_.name).update("new name")
+    } yield ()).transactionally
+  }
+``` 
+
 ### Creating a `DatabaseProvider`.
 
 `DatabaseProvider` provides a `live` layer that needs:
