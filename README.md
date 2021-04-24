@@ -67,7 +67,7 @@ import slick.interop.zio.syntax._
 
 object SlickItemRepository {
 
-  val live: ZLayer[DatabaseProvider, Throwable, Has[ItemRepository]] =
+  val live: ZLayer[Has[DatabaseProvider], Throwable, Has[ItemRepository]] =
     ZLayer.fromServiceM { db =>
       db.profile.map { profile =>
 
@@ -103,7 +103,7 @@ import slick.jdbc.H2Profile.api._
 
 val insert = ItemsTable.table += Item(0L, "name")
 
-val z: ZIO[DatabaseProvider, Throwable, Int] = ZIO.fromDBIO(insert)
+val z: ZIO[Has[DatabaseProvider], Throwable, Int] = ZIO.fromDBIO(insert)
 ```
 This is a ZIO, that can be run given a `DatabaseProvider` is present in the environment.
 
@@ -126,7 +126,7 @@ import scala.concurrent.ExecutionContext
 
 val id: Long = ???
 
-val z: ZIO[DatabaseProvider, Throwable, Unit] = 
+val z: ZIO[Has[DatabaseProvider], Throwable, Unit] = 
   ZIO.fromDBIO { implicit ec: ExecutionContext =>
     (for {
       _ <- ItemsTable.table += Item(0L, "name")
