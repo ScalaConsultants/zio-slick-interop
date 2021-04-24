@@ -5,7 +5,6 @@ import zio._
 import slick.jdbc.JdbcProfile
 import slick.jdbc.JdbcBackend
 
-
 object DatabaseProvider {
 
   trait Service {

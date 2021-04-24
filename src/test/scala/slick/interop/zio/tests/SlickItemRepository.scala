@@ -9,11 +9,10 @@ object SlickItemRepository {
   val live: ZLayer[DatabaseProvider, Throwable, Has[ItemRepository]] =
     ZLayer.fromServiceM { db =>
       db.profile.flatMap { profile =>
-
         import profile.api._
 
         val initialize = ZIO.fromDBIO(ItemsTable.table.schema.createIfNotExists)
-        
+
         val repository = new ItemRepository {
           private val items = ItemsTable.table
 
@@ -24,7 +23,7 @@ object SlickItemRepository {
 
           def getById(id: Long): IO[Throwable, Option[Item]] = {
             val query = items.filter(_.id === id).result
-        
+
             ZIO.fromDBIO(query).map(_.headOption).provide(Has(db))
           }
 
