@@ -6,7 +6,7 @@ import slick.jdbc.JdbcProfile
 import zio.test.Assertion.{ equalTo, isSome, not }
 import zio.test.TestAspect.sequential
 import zio.test._
-import zio.{ ZIO, ZLayer }
+import zio.{ Has, ZIO, ZLayer }
 
 import scala.jdk.CollectionConverters._
 
@@ -20,16 +20,16 @@ object SlickItemRepositorySpec extends DefaultRunnableSpec {
     ).asJava
   )
 
-  private val env: ZLayer[Any, Throwable, ItemRepository] =
+  private val env: ZLayer[Any, Throwable, Has[ItemRepository]] =
     (ZLayer.succeed(config) ++ ZLayer.succeed[JdbcProfile](
       slick.jdbc.H2Profile
     )) >>> DatabaseProvider.live >>> SlickItemRepository.live
 
-  private val specs: Spec[ItemRepository, TestFailure[Throwable], TestSuccess] =
+  private val specs: Spec[Has[ItemRepository], TestFailure[Throwable], TestSuccess] =
     suite("Item repository")(
       testM("Add and get items") {
         for {
-          repo <- ZIO.service[ItemRepository.Service]
+          repo <- ZIO.service[ItemRepository]
           _    <- repo.add("A")
           _    <- repo.add("B")
           a    <- repo.getById(1L)
@@ -39,7 +39,7 @@ object SlickItemRepositorySpec extends DefaultRunnableSpec {
       },
       testM("Upsert items") {
         for {
-          repo <- ZIO.service[ItemRepository.Service]
+          repo <- ZIO.service[ItemRepository]
           cId  <- repo.upsert("C")
           c    <- repo.getById(cId)
           cId2 <- repo.upsert("C")
