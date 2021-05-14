@@ -90,7 +90,7 @@ val root = (project in file("."))
       "com.typesafe.slick"     %% "slick"                       % slickVersion,
       "dev.zio"                %% "zio"                         % zioVersion,
       "dev.zio"                %% "zio-interop-reactivestreams" % zioRSVersion,
-      "org.scala-lang.modules" %% "scala-collection-compat"     % "2.4.3"    % Test,
+      "org.scala-lang.modules" %% "scala-collection-compat"     % "2.4.4"    % Test,
       "com.h2database"         % "h2"                           % "1.4.200"  % Test,
       "dev.zio"                %% "zio-test-sbt"                % zioVersion % Test
     )
