@@ -1,8 +1,8 @@
 import ReleaseTransformations._
 import ReleasePlugin.autoImport._
 
-val zioVersion       = "1.0.7"
-val zioRSVersion     = "1.3.4"
+val zioVersion       = "1.0.10"
+val zioRSVersion     = "1.3.5"
 val slickVersion     = "3.3.3"
 val scalaTestVersion = "3.1.1"
 
@@ -72,8 +72,8 @@ val root = (project in file("."))
   .settings(
     organization := "io.scalac",
     name := "zio-slick-interop",
-    scalaVersion := "2.13.5",
-    crossScalaVersions := Seq("2.12.13", "2.13.5"),
+    scalaVersion := "2.13.6",
+    crossScalaVersions := Seq("2.12.14", "2.13.6"),
     // JavaConverters ¯\_(ツ)_/¯
     Test / scalacOptions ~= (_ filterNot (_ == "-Xfatal-warnings")),
     scalacOptions ++= {
@@ -87,12 +87,12 @@ val root = (project in file("."))
     },
     testFrameworks := Seq(new TestFramework("zio.test.sbt.ZTestFramework")),
     libraryDependencies ++= Seq(
-      "com.typesafe.slick"     %% "slick"                       % slickVersion,
-      "dev.zio"                %% "zio"                         % zioVersion,
-      "dev.zio"                %% "zio-interop-reactivestreams" % zioRSVersion,
-      "org.scala-lang.modules" %% "scala-collection-compat"     % "2.4.4"    % Test,
-      "com.h2database"         % "h2"                           % "1.4.200"  % Test,
-      "dev.zio"                %% "zio-test-sbt"                % zioVersion % Test
+      "com.typesafe.slick"     %% "slick"                       % slickVersion % Provided,
+      "dev.zio"                %% "zio"                         % zioVersion   % Provided,
+      "dev.zio"                %% "zio-interop-reactivestreams" % zioRSVersion % Provided,
+      "org.scala-lang.modules" %% "scala-collection-compat"     % "2.4.3"      % Test,
+      "com.h2database"          % "h2"                          % "1.4.200"    % Test,
+      "dev.zio"                %% "zio-test-sbt"                % zioVersion   % Test
     )
   )
   .settings(publishSettings: _*)
