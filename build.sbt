@@ -72,8 +72,8 @@ val root = (project in file("."))
   .settings(
     organization := "io.scalac",
     name := "zio-slick-interop",
-    scalaVersion := "2.13.6",
-    crossScalaVersions := Seq("2.12.14", "2.13.6"),
+    scalaVersion := "2.13.8",
+    crossScalaVersions := Seq("2.12.15", "2.13.8"),
     // JavaConverters ¯\_(ツ)_/¯
     Test / scalacOptions ~= (_ filterNot (_ == "-Xfatal-warnings")),
     scalacOptions ++= {
@@ -90,8 +90,8 @@ val root = (project in file("."))
       "com.typesafe.slick"     %% "slick"                       % slickVersion % Provided,
       "dev.zio"                %% "zio"                         % zioVersion   % Provided,
       "dev.zio"                %% "zio-interop-reactivestreams" % zioRSVersion % Provided,
-      "org.scala-lang.modules" %% "scala-collection-compat"     % "2.6.0"      % Test,
-      "com.h2database"          % "h2"                          % "1.4.200"    % Test,
+      "org.scala-lang.modules" %% "scala-collection-compat"     % "2.5.0"      % Test,
+      "com.h2database"          % "h2"                          % "2.1.210"    % Test,
       "dev.zio"                %% "zio-test-sbt"                % zioVersion   % Test
     )
   )
