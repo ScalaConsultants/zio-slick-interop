@@ -67,23 +67,28 @@ import slick.interop.zio.syntax._
 
 object SlickItemRepository {
 
-  val live: ZLayer[Has[DatabaseProvider], Throwable, Has[ItemRepository]] =
-    ZLayer.fromServiceM { db =>
-      db.profile.map { profile =>
-
+  val live: ZLayer[DatabaseProvider, Throwable, ItemRepository] =
+    (for {
+      dp <- ZIO.service[DatabaseProvider]
+      repo <- dp.profile.flatMap { profile =>
+        
         import profile.api._
         
+        val dbLayer    = ZLayer.succeed(dp)
         new ItemRepository {
           private val items = ItemsTable.table
 
           def getById(id: Long): IO[Throwable, Option[Item]] = {
             val query = items.filter(_.id === id).result
         
-            ZIO.fromDBIO(query).map(_.headOption).provide(Has(db))
+            ZIO
+              .fromDBIO(query)
+              .map(_.headOption)
+              .provide(dbLayer)
           }
         }
       }
-    }
+    } yield repo).toLayer
 }
 ```
 `SlickItemRepository.live` is a repository layer that depends on raw underlying database.
@@ -103,7 +108,7 @@ import slick.jdbc.H2Profile.api._
 
 val insert = ItemsTable.table += Item(0L, "name")
 
-val z: ZIO[Has[DatabaseProvider], Throwable, Int] = ZIO.fromDBIO(insert)
+val z: ZIO[DatabaseProvider, Throwable, Int] = ZIO.fromDBIO(insert)
 ```
 This is a ZIO, that can be run given a `DatabaseProvider` is present in the environment.
 
@@ -126,7 +131,7 @@ import scala.concurrent.ExecutionContext
 
 val id: Long = ???
 
-val z: ZIO[Has[DatabaseProvider], Throwable, Unit] = 
+val z: ZIO[DatabaseProvider, Throwable, Unit] = 
   ZIO.fromDBIO { implicit ec: ExecutionContext =>
     (for {
       _ <- ItemsTable.table += Item(0L, "name")
@@ -151,7 +156,7 @@ import slick.interop.zio.DatabaseProvider
 
 val rootConfig: Config = ???
 
-val dbConfigLayer = ZLayer.fromEffect (ZIO.effect(rootConfig.getConfig("db")))
+val dbConfigLayer = ZLayer.fromZIO (ZIO.attempt(rootConfig.getConfig("db")))
 val dbBackendLayer = ZLayer.succeed(slick.jdbc.H2Profile)
 
 (dbConfigLayer ++ dbBackendLayer) >>> DatabaseProvider.live

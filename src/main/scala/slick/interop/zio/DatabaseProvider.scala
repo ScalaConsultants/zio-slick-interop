@@ -1,27 +1,34 @@
 package slick.interop.zio
 
 import com.typesafe.config.Config
+import slick.jdbc.{JdbcBackend, JdbcProfile}
 import zio._
-import slick.jdbc.JdbcProfile
-import slick.jdbc.JdbcBackend
 
 trait DatabaseProvider {
   def db: UIO[JdbcBackend#Database]
   def profile: UIO[JdbcProfile]
 }
 
+case class DatabaseProviderLive(_db: JdbcBackend#Database, _profile: JdbcProfile) extends DatabaseProvider {
+  override def db: UIO[JdbcBackend#Database] = UIO.succeed(_db)
+
+  override def profile: UIO[JdbcProfile] = UIO.succeed(_profile)
+}
+
 object DatabaseProvider {
+  val live: RLayer[Config with JdbcProfile, DatabaseProvider] = (
+    for {
+      profile  <- ZManaged.service[JdbcProfile]
+      config   <- ZManaged.service[Config]
+      provider <- ZManaged
+                    .acquireReleaseWith(acquire(config, profile))(release)
+                    .map(db => DatabaseProviderLive(db, profile))
+    } yield provider
+  ).toLayer
 
-  val live: ZLayer[Has[Config] with Has[JdbcProfile], Throwable, Has[DatabaseProvider]] =
-    ZLayer.fromServicesManaged[Config, JdbcProfile, Any, Throwable, DatabaseProvider] { (cfg: Config, p: JdbcProfile) =>
-      ZManaged
-        .make(ZIO.effect(p.backend.Database.forConfig("", cfg)))(db => ZIO.effectTotal(db.close()))
-        .map { d =>
-          new DatabaseProvider {
-            val db: UIO[JdbcBackend#Database] = ZIO.effectTotal(d)
+  private def acquire(cfg: Config, p: JdbcProfile): Task[p.backend.Database] =
+    Task.attempt(p.backend.Database.forConfig(path = "", config = cfg))
 
-            val profile: UIO[JdbcProfile] = ZIO.effectTotal(p)
-          }
-        }
-    }
+  private def release(db: JdbcBackend#Database): UIO[Unit] =
+    UIO.succeed(db.close())
 }
