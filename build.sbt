@@ -91,7 +91,7 @@ val root = (project in file("."))
       "dev.zio"                %% "zio"                         % zioVersion   % Provided,
       "dev.zio"                %% "zio-interop-reactivestreams" % zioRSVersion % Provided,
       "org.scala-lang.modules" %% "scala-collection-compat"     % "2.5.0"      % Test,
-      "com.h2database"          % "h2"                          % "2.1.210"    % Test,
+      "com.h2database"          % "h2"                          % "2.1.214"    % Test,
       "dev.zio"                %% "zio-test-sbt"                % zioVersion   % Test
     )
   )
