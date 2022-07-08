@@ -2,7 +2,7 @@ import ReleaseTransformations._
 import ReleasePlugin.autoImport._
 
 val zioVersion       = "1.0.10"
-val zioRSVersion     = "1.3.5"
+val zioRSVersion     = "1.3.12"
 val slickVersion     = "3.3.3"
 val scalaTestVersion = "3.1.1"
 
@@ -22,23 +22,23 @@ val compilerOptions = Seq(
 )
 
 val publishSettings = Seq(
-  releaseUseGlobalVersion := true,
-  releaseVersionFile := file(".") / "version.sbt",
-  releaseCommitMessage := s"Set version to ${version.value}",
+  releaseUseGlobalVersion     := true,
+  releaseVersionFile          := file(".") / "version.sbt",
+  releaseCommitMessage        := s"Set version to ${version.value}",
   releaseIgnoreUntrackedFiles := true,
-  releaseCrossBuild := true,
-  homepage := Some(url("https://github.com/ScalaConsultants/zio-slick-interop")),
-  licenses := Seq("MIT" -> url("https://opensource.org/licenses/MIT")),
-  publishTo := sonatypePublishToBundle.value,
-  publishMavenStyle := true,
-  Test / publishArtifact := false,
-  scmInfo := Some(
+  releaseCrossBuild           := true,
+  homepage                    := Some(url("https://github.com/ScalaConsultants/zio-slick-interop")),
+  licenses                    := Seq("MIT" -> url("https://opensource.org/licenses/MIT")),
+  publishTo                   := sonatypePublishToBundle.value,
+  publishMavenStyle           := true,
+  Test / publishArtifact      := false,
+  scmInfo                     := Some(
     ScmInfo(
       url("https://github.com/ScalaConsultants/zio-slick-interop"),
       "scm:git:git@github.com:ScalaConsultants/zio-slick-interop.git"
     )
   ),
-  developers := List(
+  developers                  := List(
     Developer(
       id = "vpavkin",
       name = "Vladimir Pavkin",
@@ -52,7 +52,7 @@ val publishSettings = Seq(
       url = url("https://github.com/jczuchnowski")
     )
   ),
-  releaseProcess := Seq[ReleaseStep](
+  releaseProcess              := Seq[ReleaseStep](
     checkSnapshotDependencies,
     inquireVersions,
     runClean,
@@ -70,10 +70,10 @@ val publishSettings = Seq(
 
 val root = (project in file("."))
   .settings(
-    organization := "io.scalac",
-    name := "zio-slick-interop",
-    scalaVersion := "2.13.6",
-    crossScalaVersions := Seq("2.12.14", "2.13.6"),
+    organization       := "io.scalac",
+    name               := "zio-slick-interop",
+    scalaVersion       := "2.13.8",
+    crossScalaVersions := Seq("2.12.15", "2.13.8"),
     // JavaConverters ¯\_(ツ)_/¯
     Test / scalacOptions ~= (_ filterNot (_ == "-Xfatal-warnings")),
     scalacOptions ++= {
@@ -85,13 +85,13 @@ val root = (project in file("."))
           case other                  => Seq(other)
         }
     },
-    testFrameworks := Seq(new TestFramework("zio.test.sbt.ZTestFramework")),
+    testFrameworks     := Seq(new TestFramework("zio.test.sbt.ZTestFramework")),
     libraryDependencies ++= Seq(
       "com.typesafe.slick"     %% "slick"                       % slickVersion % Provided,
       "dev.zio"                %% "zio"                         % zioVersion   % Provided,
       "dev.zio"                %% "zio-interop-reactivestreams" % zioRSVersion % Provided,
       "org.scala-lang.modules" %% "scala-collection-compat"     % "2.5.0"      % Test,
-      "com.h2database"          % "h2"                          % "1.4.200"    % Test,
+      "com.h2database"          % "h2"                          % "2.1.210"    % Test,
       "dev.zio"                %% "zio-test-sbt"                % zioVersion   % Test
     )
   )
