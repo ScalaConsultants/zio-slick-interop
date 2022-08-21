@@ -10,7 +10,7 @@ Small library, that provides interop between [Slick](http://scala-slick.org/) an
 Include zio-slick-interop in your build:
 
 ```
-libraryDependencies += "io.scalac" %% "zio-slick-interop" % "0.3.0"
+libraryDependencies += "io.scalac" %% "zio-slick-interop" % "0.5.0"
 ```
 
 It gives you a couple of nice things:
