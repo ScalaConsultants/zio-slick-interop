@@ -31,7 +31,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        java: ['adopt@1.8', 'adopt@1.11']
+        java: [temurin@8, temurin@11, temurin@17]
         scala: ['2.12.16', '2.13.8']
     steps:
     - name: Checkout current branch
