@@ -1,10 +1,22 @@
-import ReleaseTransformations._
-import ReleasePlugin.autoImport._
 
-val zioVersion       = "1.0.10"
-val zioRSVersion     = "1.3.12"
+val zioVersion       = "2.0.0"
+val zioRSVersion     = "2.0.0"
 val slickVersion     = "3.3.3"
 val scalaTestVersion = "3.1.1"
+
+inThisBuild(List(
+  organization := "io.scalac",
+  homepage := Some(url("https://github.com/ScalaConsultants/zio-slick-interop")),
+  licenses := List("MIT" -> url("https://opensource.org/licenses/MIT")),
+  developers := List(
+    Developer(
+      id = "jczuchnowski",
+      name = "Jakub Czuchnowski",
+      email = "jakub.czuchnowski@gmail.com",
+      url = url("https://github.com/jczuchnowski")
+    )
+  )
+))
 
 val compilerOptions = Seq(
   "-deprecation",
@@ -21,59 +33,11 @@ val compilerOptions = Seq(
   "-Ywarn-unused-import"
 )
 
-val publishSettings = Seq(
-  releaseUseGlobalVersion     := true,
-  releaseVersionFile          := file(".") / "version.sbt",
-  releaseCommitMessage        := s"Set version to ${version.value}",
-  releaseIgnoreUntrackedFiles := true,
-  releaseCrossBuild           := true,
-  homepage                    := Some(url("https://github.com/ScalaConsultants/zio-slick-interop")),
-  licenses                    := Seq("MIT" -> url("https://opensource.org/licenses/MIT")),
-  publishTo                   := sonatypePublishToBundle.value,
-  publishMavenStyle           := true,
-  Test / publishArtifact      := false,
-  scmInfo                     := Some(
-    ScmInfo(
-      url("https://github.com/ScalaConsultants/zio-slick-interop"),
-      "scm:git:git@github.com:ScalaConsultants/zio-slick-interop.git"
-    )
-  ),
-  developers                  := List(
-    Developer(
-      id = "vpavkin",
-      name = "Vladimir Pavkin",
-      email = "vpavkin@gmail.com",
-      url = url("https://pavkin.ru")
-    ),
-    Developer(
-      id = "jczuchnowski",
-      name = "Jakub Czuchnowski",
-      email = "jakub.czuchnowski@gmail.com",
-      url = url("https://github.com/jczuchnowski")
-    )
-  ),
-  releaseProcess              := Seq[ReleaseStep](
-    checkSnapshotDependencies,
-    inquireVersions,
-    runClean,
-    runTest,
-    setReleaseVersion,
-    commitReleaseVersion,
-    tagRelease,
-    releaseStepCommandAndRemaining("+publishSigned"),
-    releaseStepCommand("sonatypeBundleRelease"),
-    setNextVersion,
-    commitNextVersion,
-    pushChanges
-  )
-)
-
 val root = (project in file("."))
   .settings(
-    organization       := "io.scalac",
-    name               := "zio-slick-interop",
-    scalaVersion       := "2.13.8",
-    crossScalaVersions := Seq("2.12.15", "2.13.8"),
+    name := "zio-slick-interop",
+    scalaVersion := "2.13.8",
+    crossScalaVersions := Seq("2.12.16", "2.13.8"),
     // JavaConverters ¯\_(ツ)_/¯
     Test / scalacOptions ~= (_ filterNot (_ == "-Xfatal-warnings")),
     scalacOptions ++= {
@@ -90,12 +54,11 @@ val root = (project in file("."))
       "com.typesafe.slick"     %% "slick"                       % slickVersion % Provided,
       "dev.zio"                %% "zio"                         % zioVersion   % Provided,
       "dev.zio"                %% "zio-interop-reactivestreams" % zioRSVersion % Provided,
-      "org.scala-lang.modules" %% "scala-collection-compat"     % "2.5.0"      % Test,
+      "org.scala-lang.modules" %% "scala-collection-compat"     % "2.8.1"      % Test,
       "com.h2database"          % "h2"                          % "2.1.214"    % Test,
       "dev.zio"                %% "zio-test-sbt"                % zioVersion   % Test
     )
   )
-  .settings(publishSettings: _*)
 
 def priorTo2_13(scalaVersion: String): Boolean =
   CrossVersion.partialVersion(scalaVersion) match {
