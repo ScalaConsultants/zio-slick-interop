@@ -1,8 +1,8 @@
 import ReleaseTransformations._
 import ReleasePlugin.autoImport._
 
-val zioVersion       = "1.0.10"
-val zioRSVersion     = "1.3.12"
+val zioVersion       = "2.0.0"
+val zioRSVersion     = "2.0.0"
 val slickVersion     = "3.3.3"
 val scalaTestVersion = "3.1.1"
 
@@ -70,10 +70,10 @@ val publishSettings = Seq(
 
 val root = (project in file("."))
   .settings(
-    organization       := "io.scalac",
-    name               := "zio-slick-interop",
-    scalaVersion       := "2.13.8",
-    crossScalaVersions := Seq("2.12.15", "2.13.8"),
+    organization := "io.scalac",
+    name := "zio-slick-interop",
+    scalaVersion := "2.13.8",
+    crossScalaVersions := Seq("2.12.16", "2.13.8"),
     // JavaConverters ¯\_(ツ)_/¯
     Test / scalacOptions ~= (_ filterNot (_ == "-Xfatal-warnings")),
     scalacOptions ++= {

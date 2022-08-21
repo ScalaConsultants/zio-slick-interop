@@ -12,16 +12,17 @@ trait DatabaseProvider {
 
 object DatabaseProvider {
 
-  val live: ZLayer[Has[Config] with Has[JdbcProfile], Throwable, Has[DatabaseProvider]] =
-    ZLayer.fromServicesManaged[Config, JdbcProfile, Any, Throwable, DatabaseProvider] { (cfg: Config, p: JdbcProfile) =>
-      ZManaged
-        .make(ZIO.effect(p.backend.Database.forConfig("", cfg)))(db => ZIO.effectTotal(db.close()))
-        .map { d =>
-          new DatabaseProvider {
-            val db: UIO[JdbcBackend#Database] = ZIO.effectTotal(d)
-
-            val profile: UIO[JdbcProfile] = ZIO.effectTotal(p)
-          }
-        }
+  val live: ZLayer[Config with JdbcProfile, Throwable, DatabaseProvider] = {
+    val dbProvider = for {
+      cfg <- ZIO.service[Config]
+      p   <- ZIO.service[JdbcProfile]
+      db   = ZIO.attempt(p.backend.Database.forConfig("", cfg))
+      a   <- ZIO.acquireRelease(db)(db => ZIO.succeed(db.close()))
+    } yield new DatabaseProvider {
+      override val db: UIO[JdbcBackend#Database] = ZIO.succeed(a)
+      override val profile: UIO[JdbcProfile]     = ZIO.succeed(p)
     }
+
+    ZLayer.scoped(dbProvider)
+  }
 }
