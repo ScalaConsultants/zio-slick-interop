@@ -44,7 +44,7 @@ object SlickItemRepository {
     ZLayer {
       for {
         dbProvider <- ZIO.service[DatabaseProvider]
-        repo <- f(dbProvider)
+        repo       <- f(dbProvider)
       } yield repo
     }
   }
