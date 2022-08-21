@@ -5,6 +5,9 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
+  release:
+    types:
+    - published
 
 jobs:
   lint:
@@ -41,3 +44,22 @@ jobs:
       uses: coursier/cache-action@v5
     - name: Run tests
       run: sbt ++${{ matrix.scala }}! test
+
+  publish:
+
+    runs-on: ubuntu-latest
+
+    needs: [build]
+    if: github.event_name != 'pull_request'
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - uses: olafurpg/setup-scala@v10
+    - run: sbt ci-release
+      env:
+        PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
+        PGP_SECRET: ${{ secrets.PGP_SECRET }}
+        SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+        SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
