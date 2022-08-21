@@ -6,8 +6,8 @@ import zio._
 
 object SlickItemRepository {
 
-  val live: ZLayer[Has[DatabaseProvider], Throwable, Has[ItemRepository]] =
-    ZLayer.fromServiceM { db =>
+  val live: ZLayer[DatabaseProvider, Throwable, ItemRepository] = {
+    val f = (db: DatabaseProvider) =>
       db.profile.flatMap { profile =>
         import profile.api._
 
@@ -19,12 +19,12 @@ object SlickItemRepository {
           def add(name: String): IO[Throwable, Long] =
             ZIO
               .fromDBIO((items returning items.map(_.id)) += Item(0L, name))
-              .provide(Has(db))
+              .provide(ZLayer.succeed(db))
 
           def getById(id: Long): IO[Throwable, Option[Item]] = {
             val query = items.filter(_.id === id).result
 
-            ZIO.fromDBIO(query).map(_.headOption).provide(Has(db))
+            ZIO.fromDBIO(query).map(_.headOption).provide(ZLayer.succeed(db))
           }
 
           def upsert(name: String): IO[Throwable, Long] =
@@ -35,10 +35,17 @@ object SlickItemRepository {
                              (items returning items.map(_.id)) += Item(0L, name)
                            )(item => (items.map(_.name) update name).map(_ => item.id))
               } yield id).transactionally
-            }.provide(Has(db))
+            }.provide(ZLayer.succeed(db))
         }
 
-        initialize.as(repository).provide(Has(db))
+        initialize.as(repository).provide(ZLayer.succeed(db))
       }
+
+    ZLayer {
+      for {
+        dbProvider <- ZIO.service[DatabaseProvider]
+        repo <- f(dbProvider)
+      } yield repo
     }
+  }
 }
