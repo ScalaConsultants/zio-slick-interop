@@ -1,22 +1,23 @@
-
-val zioVersion       = "2.0.0"
-val zioRSVersion     = "2.0.0"
+val zioVersion       = "2.0.4"
+val zioRSVersion     = "2.0.4"
 val slickVersion     = "3.3.3"
 val scalaTestVersion = "3.1.1"
 
-inThisBuild(List(
-  organization := "io.scalac",
-  homepage := Some(url("https://github.com/ScalaConsultants/zio-slick-interop")),
-  licenses := List("MIT" -> url("https://opensource.org/licenses/MIT")),
-  developers := List(
-    Developer(
-      id = "jczuchnowski",
-      name = "Jakub Czuchnowski",
-      email = "jakub.czuchnowski@gmail.com",
-      url = url("https://github.com/jczuchnowski")
+inThisBuild(
+  List(
+    organization := "io.scalac",
+    homepage     := Some(url("https://github.com/ScalaConsultants/zio-slick-interop")),
+    licenses     := List("MIT" -> url("https://opensource.org/licenses/MIT")),
+    developers   := List(
+      Developer(
+        id = "jczuchnowski",
+        name = "Jakub Czuchnowski",
+        email = "jakub.czuchnowski@gmail.com",
+        url = url("https://github.com/jczuchnowski")
+      )
     )
   )
-))
+)
 
 val compilerOptions = Seq(
   "-deprecation",
@@ -35,8 +36,8 @@ val compilerOptions = Seq(
 
 val root = (project in file("."))
   .settings(
-    name := "zio-slick-interop",
-    scalaVersion := "2.13.8",
+    name               := "zio-slick-interop",
+    scalaVersion       := "2.13.8",
     crossScalaVersions := Seq("2.12.16", "2.13.8"),
     // JavaConverters ¯\_(ツ)_/¯
     Test / scalacOptions ~= (_ filterNot (_ == "-Xfatal-warnings")),
