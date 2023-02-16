@@ -37,8 +37,9 @@ val compilerOptions = Seq(
 val root = (project in file("."))
   .settings(
     name               := "zio-slick-interop",
-    scalaVersion       := "2.13.8",
-    crossScalaVersions := Seq("2.12.16", "2.13.8"),
+    scalaVersion       := "2.13.10",
+    crossScalaVersions := Seq("2.12.16", "2.13.10"),
+
     // JavaConverters ¯\_(ツ)_/¯
     Test / scalacOptions ~= (_ filterNot (_ == "-Xfatal-warnings")),
     scalacOptions ++= {
