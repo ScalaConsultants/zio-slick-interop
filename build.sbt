@@ -39,6 +39,7 @@ val root = (project in file("."))
     name               := "zio-slick-interop",
     scalaVersion       := "2.13.10",
     crossScalaVersions := Seq("2.12.16", "2.13.10"),
+
     // JavaConverters ¯\_(ツ)_/¯
     Test / scalacOptions ~= (_ filterNot (_ == "-Xfatal-warnings")),
     scalacOptions ++= {
@@ -55,7 +56,7 @@ val root = (project in file("."))
       "com.typesafe.slick"     %% "slick"                       % slickVersion % Provided,
       "dev.zio"                %% "zio"                         % zioVersion   % Provided,
       "dev.zio"                %% "zio-interop-reactivestreams" % zioRSVersion % Provided,
-      "org.scala-lang.modules" %% "scala-collection-compat"     % "2.8.1"      % Test,
+      "org.scala-lang.modules" %% "scala-collection-compat"     % "2.9.0"      % Test,
       "com.h2database"          % "h2"                          % "2.1.214"    % Test,
       "dev.zio"                %% "zio-test-sbt"                % zioVersion   % Test
     )
