@@ -23,7 +23,7 @@ object SlickItemRepositorySpec extends ZIOSpecDefault {
   private val env: ZLayer[Any, Throwable, ItemRepository] =
     (ZLayer.succeed(config) ++ ZLayer.succeed[JdbcProfile](
       slick.jdbc.H2Profile
-    )) >>> DatabaseProvider.live >>> SlickItemRepository.live
+    )) >>> DatabaseProvider.fromConfig() >>> SlickItemRepository.live
 
   private val specs: Spec[ItemRepository, Throwable] =
     suite("Item repository")(
