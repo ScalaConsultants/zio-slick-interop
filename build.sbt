@@ -1,6 +1,6 @@
 val zioVersion       = "2.0.0"
 val zioRSVersion     = "2.0.0"
-val slickVersion     = "3.3.3"
+val slickVersion     = "3.4.1"
 val scalaTestVersion = "3.1.1"
 
 inThisBuild(
