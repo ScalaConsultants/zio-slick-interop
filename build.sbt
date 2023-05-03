@@ -1,5 +1,5 @@
-val zioVersion       = "2.0.0"
-val zioRSVersion     = "2.0.0"
+val zioVersion       = "2.0.2"
+val zioRSVersion     = "2.0.2"
 val slickVersion     = "3.4.1"
 val scalaTestVersion = "3.1.1"
 
