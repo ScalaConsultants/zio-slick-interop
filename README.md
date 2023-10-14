@@ -70,25 +70,25 @@ object SlickItemRepository {
   val live: ZLayer[DatabaseProvider, Throwable, ItemRepository] =
     ZLayer {
       for {
-        db   <- ZIO.service[DatabaseProvider]
-        repo <- db.profile.flatMap { profile =>
-          import profile.api._
+        db <- ZIO.service[DatabaseProvider]
+        profile <- db.profile
+      } yield {
+        import profile.api._
 
-          val dbLayer = ZLayer.succeed(dp)
+        val dbLayer = ZLayer.succeed(db)
 
-          new ItemRepository {
-            private val items = ItemsTable.table
+        new ItemRepository {
+          private val items = ItemsTable.table
 
-            def getById(id: Long): IO[Throwable, Option[Item]] = {
-              val query = items.filter(_.id === id).result
+          def getById(id: Long): IO[Throwable, Option[Item]] = {
+            val query = items.filter(_.id === id).result
 
-              ZIO.fromDBIO(query)
-                .map(_.headOption)
-                .provide(dbLayer)
-            }
+            ZIO.fromDBIO(query)
+              .map(_.headOption)
+              .provide(dbLayer)
           }
         }
-      } yield repo
+      }
     }
 }
 ```
